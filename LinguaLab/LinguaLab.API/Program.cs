@@ -31,6 +31,9 @@ namespace LinguaLab.API
             builder.Services.AddScoped<IWordService, WordService>();
             builder.Services.AddScoped<IWordProgressRepository, WordProgressRepository>();
             builder.Services.AddScoped<ILearningService, LearningService>();
+            builder.Services.AddScoped<IReviewLogRepository, ReviewLogRepository>();
+            builder.Services.AddScoped<IAnalyticsRepository, AnalyticsRepository>();
+            builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -96,6 +99,7 @@ namespace LinguaLab.API
             app.MapCategoriesEndpoints();
             app.MapWordsEndpoints();
             app.MapLearningEndpoints();
+            app.MapAnalyticsEndpoints();
 
             app.Run();
         }

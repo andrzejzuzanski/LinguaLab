@@ -12,9 +12,11 @@ namespace LinguaLab.Application.Services
     public class LearningService : ILearningService
     {
         private readonly IWordProgressRepository _wordProgressRepository;
-        public LearningService(IWordProgressRepository wordProgressRepository)
+        private readonly IReviewLogRepository _reviewLogRepository;
+        public LearningService(IWordProgressRepository wordProgressRepository, IReviewLogRepository reviewLogRepository)
         {
             _wordProgressRepository = wordProgressRepository;
+            _reviewLogRepository = reviewLogRepository;
         }
 
         public async Task<IEnumerable<WordDto>> GetWordsForSessionAsync(Guid userId, int sessionSize = 10)
@@ -43,6 +45,16 @@ namespace LinguaLab.Application.Services
 
         public async Task ProcessAnswerAsync(Guid userId, SubmitAnswerDto answerDto)
         {
+            var reviewLog = new ReviewLog
+            {
+                Id = Guid.NewGuid(),
+                UserId = userId,
+                WordId = answerDto.WordId,
+                ReviewTimestamp = DateTime.UtcNow,
+                Quality = answerDto.Quality,
+            };
+            await _reviewLogRepository.AddAsync(reviewLog);
+
             if (answerDto.Quality < 0 || answerDto.Quality > 5)
             {
                 throw new ArgumentException("Quality must be between 0 and 5.");

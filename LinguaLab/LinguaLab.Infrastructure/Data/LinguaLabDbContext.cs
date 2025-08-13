@@ -19,6 +19,7 @@ namespace LinguaLab.Infrastructure.Data
         public DbSet<Word> Words { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<WordProgress> WordProgresses { get; set; }
+        public DbSet<ReviewLog> ReviewLogs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -51,6 +52,19 @@ namespace LinguaLab.Infrastructure.Data
                 eb.HasOne(wp => wp.Word)
                 .WithMany()
                 .HasForeignKey(wp => wp.WordId)
+                .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<ReviewLog>(eb =>
+            {
+                eb.HasOne(rl => rl.User)
+                .WithMany()
+                .HasForeignKey(rl => rl.UserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                eb.HasOne(rl => rl.Word)
+                .WithMany()
+                .HasForeignKey(rl => rl.WordId)
                 .OnDelete(DeleteBehavior.Cascade);
             });
 
