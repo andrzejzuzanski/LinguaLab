@@ -13,5 +13,6 @@ namespace LinguaLab.Application.Interfaces
         Task AddUserAsync(User user);
         Task<int> SaveChangesAsync();
         Task<User?> GetUserByEmailAsync(string email);
+        Task<User?> GetUserByIdAsync(Guid id);
     }
 }

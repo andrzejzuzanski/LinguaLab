@@ -47,6 +47,7 @@ namespace LinguaLab.Application.Services
             {
                 Id = Guid.NewGuid(),
                 Email = registerUserDto.Email,
+                Username = registerUserDto.Username,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerUserDto.Password),
                 CreatedAt = DateTime.UtcNow
             };
