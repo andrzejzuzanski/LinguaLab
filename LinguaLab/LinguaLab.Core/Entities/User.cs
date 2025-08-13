@@ -16,5 +16,6 @@ namespace LinguaLab.Core.Entities
         public int CurrentLevel { get; set; } = 1;
         public int TotalXP { get; set; } = 0;
         public int CurrentStreak { get; set; } = 0;
+        public DateTime CreatedAt { get; set; }
     }
 }

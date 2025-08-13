@@ -1,5 +1,13 @@
+using LinguaLab.API.Endpoints;
+using LinguaLab.Application.Interfaces;
+using LinguaLab.Application.Services;
 using LinguaLab.Infrastructure.Data;
+using LinguaLab.Infrastructure.Repositories;
+using LinguaLab.Infrastructure.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace LinguaLab.API
 {
@@ -12,6 +20,23 @@ namespace LinguaLab.API
             // Add services to the container.
             builder.Services.AddDbContext<LinguaLabDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("LinguaLabConnection")));
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
+
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
+                    ValidateIssuer = true,
+                    ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                    ValidateAudience = false,
+                    ValidateLifetime = true
+                };
+            });
             builder.Services.AddAuthorization();
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -29,7 +54,10 @@ namespace LinguaLab.API
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            app.MapAuthEndpoints();
 
             app.Run();
         }

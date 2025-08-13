@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LinguaLab.Application\LinguaLab.Application.csproj" />
     <ProjectReference Include="..\LinguaLab.Core\LinguaLab.Core.csproj" />
   </ItemGroup>
 
