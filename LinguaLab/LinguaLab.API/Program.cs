@@ -27,6 +27,8 @@ namespace LinguaLab.API
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
             builder.Services.AddScoped<ICategoryService, CategoryService>();
+            builder.Services.AddScoped<IWordRepository, WordRepository>();
+            builder.Services.AddScoped<IWordService, WordService>();
 
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
@@ -90,6 +92,7 @@ namespace LinguaLab.API
             app.MapAuthEndpoints();
             app.MapUsersEndpoints();
             app.MapCategoriesEndpoints();
+            app.MapWordsEndpoints();
 
             app.Run();
         }
