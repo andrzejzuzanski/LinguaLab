@@ -18,6 +18,21 @@ namespace LinguaLab.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<IEnumerable<CategoryAccuracyDto>> GetAccuracyByCategoryAsync(Guid userId)
+        {
+            return await _context.ReviewLogs
+                .Where(rl => rl.UserId == userId)
+                .Include(rl => rl.Word)
+                .ThenInclude(w => w.Category)
+                .GroupBy(rl => rl.Word.Category.Name)
+                .Select(g => new CategoryAccuracyDto
+                {
+                    CategoryName = g.Key,
+                    Accuracy = g.Average(rl => rl.Quality) /5.0 * 100.0
+                })
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<ActivityHeatmapDto>> GetLearnedWordsByDayAsync(Guid userId)
         {
             var allLogs = await _context.ReviewLogs
@@ -26,9 +41,9 @@ namespace LinguaLab.Infrastructure.Repositories
                     .ToListAsync();
 
             var result = allLogs
-                    .GroupBy(rl => rl.WordId) // Najpierw grupujemy wszystkie logi po WordId
-                    .Select(g => g.First())   // Z każdej grupy bierzemy tylko pierwszy log (najwcześniejszą odpowiedź)
-                    .GroupBy(firstReview => firstReview.ReviewTimestamp.Date) // Teraz grupujemy te "pierwsze odpowiedzi" po dacie
+                    .GroupBy(rl => rl.WordId)
+                    .Select(g => g.First())
+                    .GroupBy(firstReview => firstReview.ReviewTimestamp.Date)
                     .Select(finalGroup => new ActivityHeatmapDto
                     {
                         Date = finalGroup.Key,

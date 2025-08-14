@@ -16,6 +16,11 @@ namespace LinguaLab.Application.Services
             _analyticsRepository = analyticsRepository;
         }
 
+        public async Task<IEnumerable<CategoryAccuracyDto>> GetCategoryAccuracyAsync(Guid userId)
+        {
+            return await _analyticsRepository.GetAccuracyByCategoryAsync(userId);
+        }
+
         public async Task<IEnumerable<ActivityHeatmapDto>> GetLearnedWordsChartDataAsync(Guid userId)
         {
             return await _analyticsRepository.GetLearnedWordsByDayAsync(userId);

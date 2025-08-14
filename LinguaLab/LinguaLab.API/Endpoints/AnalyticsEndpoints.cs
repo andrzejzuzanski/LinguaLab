@@ -27,6 +27,13 @@ namespace LinguaLab.API.Endpoints
                 return Results.Ok(chartData);
             });
 
+            group.MapGet("/accuracy-by-category", async (HttpContext httpContext, IAnalyticsService analyticsService) =>
+            {
+                var userId = Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var accuracyData = await analyticsService.GetCategoryAccuracyAsync(userId);
+                return Results.Ok(accuracyData);
+            });
+
             return app;
         }
     }

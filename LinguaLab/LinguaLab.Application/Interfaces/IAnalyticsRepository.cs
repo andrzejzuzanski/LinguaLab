@@ -11,5 +11,6 @@ namespace LinguaLab.Application.Interfaces
     {
         Task<IEnumerable<ActivityHeatmapDto>> GetUserActivityByDayAsync(Guid userId);
         Task<IEnumerable<ActivityHeatmapDto>> GetLearnedWordsByDayAsync(Guid userId);
+        Task<IEnumerable<CategoryAccuracyDto>> GetAccuracyByCategoryAsync(Guid userId);
     }
 }
