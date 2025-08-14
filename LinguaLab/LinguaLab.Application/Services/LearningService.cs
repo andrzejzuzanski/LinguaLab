@@ -13,10 +13,12 @@ namespace LinguaLab.Application.Services
     {
         private readonly IWordProgressRepository _wordProgressRepository;
         private readonly IReviewLogRepository _reviewLogRepository;
-        public LearningService(IWordProgressRepository wordProgressRepository, IReviewLogRepository reviewLogRepository)
+        private readonly IUserRepository _userRepository;
+        public LearningService(IWordProgressRepository wordProgressRepository, IReviewLogRepository reviewLogRepository, IUserRepository userRepository)
         {
             _wordProgressRepository = wordProgressRepository;
             _reviewLogRepository = reviewLogRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<IEnumerable<WordDto>> GetWordsForSessionAsync(Guid userId, int sessionSize = 10)
@@ -99,6 +101,47 @@ namespace LinguaLab.Application.Services
             }
 
             progress.NextReviewDate = DateTime.UtcNow.AddDays(progress.Interval);
+
+            if (answerDto.Quality >= 3)
+            {
+                var user = await _userRepository.GetUserByIdAsync(userId);
+
+                if (user != null)
+                {
+                    var lastReviewDate = await _reviewLogRepository.GetLastReviewTimestampForUserAsync(userId);
+                    var today = DateTime.UtcNow.Date;
+
+                    if (lastReviewDate.HasValue)
+                    {
+                        var lastReviewDay = lastReviewDate.Value.Date;
+
+                        if (lastReviewDay == today){}
+                        else if (lastReviewDay == today.AddDays(-1))
+                        {
+                            user.CurrentStreak++;
+                        }
+                        else
+                        {
+                            user.CurrentStreak = 1;
+                        }
+                    }
+                    else
+                    {
+                        user.CurrentStreak = 1;
+                    }
+
+                    user.TotalXP += 10;
+
+                    int xpForNextLevel = user.CurrentLevel * 100;
+                    if (user.TotalXP >= xpForNextLevel)
+                    {
+                        user.CurrentLevel++;
+                    }
+
+                    _userRepository.Update(user);
+                }
+            }
+
             await _wordProgressRepository.SaveChangesAsync();
         }
     }

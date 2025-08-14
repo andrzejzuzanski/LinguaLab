@@ -10,5 +10,6 @@ namespace LinguaLab.Application.Interfaces
     public interface IReviewLogRepository
     {
         Task AddAsync(ReviewLog log);
+        Task<DateTime?> GetLastReviewTimestampForUserAsync(Guid userId);
     }
 }

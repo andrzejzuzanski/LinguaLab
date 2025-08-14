@@ -1,6 +1,7 @@
 ﻿using LinguaLab.Application.Interfaces;
 using LinguaLab.Core.Entities;
 using LinguaLab.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,15 @@ namespace LinguaLab.Infrastructure.Repositories
         public async Task AddAsync(ReviewLog log)
         {
             await _context.ReviewLogs.AddAsync(log);
+        }
+
+        public async Task<DateTime?> GetLastReviewTimestampForUserAsync(Guid userId)
+        {
+            return await _context.ReviewLogs
+            .Where(rl => rl.UserId == userId)
+            .OrderByDescending(rl => rl.ReviewTimestamp)
+            .Select(rl => (DateTime?)rl.ReviewTimestamp)
+            .FirstOrDefaultAsync();
         }
     }
 }

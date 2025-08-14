@@ -39,6 +39,11 @@ namespace LinguaLab.Infrastructure.Repositories
             return await _context.SaveChangesAsync();
         }
 
+        public void Update(User user)
+        {
+            _context.Users.Update(user);
+        }
+
         public async Task<bool> UserExistsByEmailAsync(string email)
         {
             return await _context.Users.AnyAsync(u => u.Email == email);
