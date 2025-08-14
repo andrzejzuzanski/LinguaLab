@@ -20,6 +20,13 @@ namespace LinguaLab.API.Endpoints
                 return Results.Ok(heatmapData);
             });
 
+            group.MapGet("/learned-words-chart", async (HttpContext httpContext, IAnalyticsService analyticsService) =>
+            {
+                var userId = Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+                var chartData = await analyticsService.GetLearnedWordsChartDataAsync(userId);
+                return Results.Ok(chartData);
+            });
+
             return app;
         }
     }

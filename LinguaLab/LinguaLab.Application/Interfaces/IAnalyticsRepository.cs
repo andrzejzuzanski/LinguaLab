@@ -10,5 +10,6 @@ namespace LinguaLab.Application.Interfaces
     public interface IAnalyticsRepository
     {
         Task<IEnumerable<ActivityHeatmapDto>> GetUserActivityByDayAsync(Guid userId);
+        Task<IEnumerable<ActivityHeatmapDto>> GetLearnedWordsByDayAsync(Guid userId);
     }
 }
