@@ -11,7 +11,7 @@ namespace LinguaLab.Infrastructure.Data
     public class LinguaLabDbContext : DbContext
     {
         public LinguaLabDbContext(DbContextOptions<LinguaLabDbContext> options)
-            :base(options)
+            : base(options)
         {
         }
 
@@ -20,6 +20,8 @@ namespace LinguaLab.Infrastructure.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<WordProgress> WordProgresses { get; set; }
         public DbSet<ReviewLog> ReviewLogs { get; set; }
+        public DbSet<Achievement> Achievements { get; set; }
+        public DbSet<UserAchievement> UserAchievements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -66,6 +68,19 @@ namespace LinguaLab.Infrastructure.Data
                 .WithMany()
                 .HasForeignKey(rl => rl.WordId)
                 .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<UserAchievement>(eb =>
+            {
+                eb.HasKey(ua => new { ua.UserId, ua.AchievementId });
+
+                eb.HasOne(ua => ua.User)
+                .WithMany()
+                .HasForeignKey(ua => ua.UserId);
+
+                eb.HasOne(ua => ua.Achievement)
+                .WithMany()
+                .HasForeignKey(ua => ua.AchievementId);
             });
 
         }

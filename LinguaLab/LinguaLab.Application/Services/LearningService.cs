@@ -14,11 +14,17 @@ namespace LinguaLab.Application.Services
         private readonly IWordProgressRepository _wordProgressRepository;
         private readonly IReviewLogRepository _reviewLogRepository;
         private readonly IUserRepository _userRepository;
-        public LearningService(IWordProgressRepository wordProgressRepository, IReviewLogRepository reviewLogRepository, IUserRepository userRepository)
+        private readonly IAchievementService _achievementService;
+        public LearningService(
+            IWordProgressRepository wordProgressRepository, 
+            IReviewLogRepository reviewLogRepository, 
+            IUserRepository userRepository,
+            IAchievementService achievementService)
         {
             _wordProgressRepository = wordProgressRepository;
             _reviewLogRepository = reviewLogRepository;
             _userRepository = userRepository;
+            _achievementService = achievementService;
         }
 
         public async Task<IEnumerable<WordDto>> GetWordsForSessionAsync(Guid userId, int sessionSize = 10)
@@ -139,6 +145,8 @@ namespace LinguaLab.Application.Services
                     }
 
                     _userRepository.Update(user);
+
+                    await _achievementService.CheckAndAwardAchievementsAsync(user);
                 }
             }
 
