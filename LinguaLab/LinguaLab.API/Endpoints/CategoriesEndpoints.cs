@@ -22,6 +22,35 @@ namespace LinguaLab.API.Endpoints
                 return Results.Created($"/api/categories/{newCategory.Id}", newCategory);
             }).RequireAuthorization();
 
+            group.MapPut("/{id}", async (Guid id, UpdateCategoryDto updateDto, ICategoryService categoryService) =>
+            {
+                var updatedCategory = await categoryService.UpdateCategoryAsync(id, updateDto);
+
+                if (updatedCategory == null)
+                {
+                    return Results.NotFound();
+                }
+                return Results.Ok(updatedCategory);
+
+            }).RequireAuthorization();
+
+            group.MapDelete("/{id}", async (Guid id, ICategoryService categoryService) =>
+            {
+                try
+                {
+                    var success = await categoryService.DeleteCategoryAsync(id);
+                    if (!success)
+                    {
+                        return Results.NotFound();
+                    }
+                    return Results.NoContent();
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return Results.BadRequest(new {message = ex.Message});
+                }
+            }).RequireAuthorization();
+
             return app;
         }
     }

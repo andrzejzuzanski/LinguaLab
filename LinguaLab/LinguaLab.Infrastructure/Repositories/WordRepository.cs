@@ -24,6 +24,11 @@ namespace LinguaLab.Infrastructure.Repositories
             await _context.Words.AddAsync(word);
         }
 
+        public async Task<Word?> GetByIdAsync(Guid wordId)
+        {
+            return await _context.Words.FindAsync(wordId);
+        }
+
         public async Task<IEnumerable<Word>> GetWordsForUserAsync(Guid userId)
         {
             return await _context.Words
@@ -31,9 +36,19 @@ namespace LinguaLab.Infrastructure.Repositories
                 .ToListAsync();
         }
 
+        public void Remove(Word word)
+        {
+            _context.Words.Remove(word);
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public void Update(Word word)
+        {
+            _context.Words.Update(word);
         }
     }
 }

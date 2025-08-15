@@ -34,9 +34,25 @@ namespace LinguaLab.Infrastructure.Repositories
             return await _context.Categories.FindAsync(id);
         }
 
+        public async Task<bool> IsEmptyAsync(Guid categoryId)
+        {
+            return !await _context.Words
+                .AnyAsync(w => w.CategoryId == categoryId);
+        }
+
+        public void Remove(Category category)
+        {
+            _context.Categories.Remove(category);
+        }
+
         public async Task<int> SaveChangesAsync()
         {
             return await _context.SaveChangesAsync();
+        }
+
+        public void Update(Category category)
+        {
+            _context.Categories.Update(category);
         }
     }
 }

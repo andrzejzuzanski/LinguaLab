@@ -1,4 +1,5 @@
 ﻿using LinguaLab.Application.DTOs;
+using LinguaLab.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,7 @@ namespace LinguaLab.Application.Interfaces
     {
         Task<IEnumerable<WordDto>> GetWordsForUserAsync(Guid userId);
         Task<WordDto> CreateWordAsync(CreateWordDto createWordDto, Guid userId);
+        Task<WordDto?> UpdateWordAsync(Guid wordId, UpdateWordDto updateWordDto, Guid userId);
+        Task<bool> DeleteWordAsync(Guid wordId, Guid userId);
     }
 }

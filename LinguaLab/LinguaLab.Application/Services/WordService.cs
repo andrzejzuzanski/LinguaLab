@@ -45,6 +45,20 @@ namespace LinguaLab.Application.Services
             };
         }
 
+        public async Task<bool> DeleteWordAsync(Guid wordId, Guid userId)
+        {
+            var word = _wordRepository.GetByIdAsync(wordId);
+
+            if (word == null || word.Result?.CreatedById != userId)
+            {
+                return false;
+            }
+
+            _wordRepository.Remove(word.Result);
+            await _wordRepository.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<IEnumerable<WordDto>> GetWordsForUserAsync(Guid userId)
         {
             var words = await _wordRepository.GetWordsForUserAsync(userId);
@@ -58,6 +72,35 @@ namespace LinguaLab.Application.Services
                 ExampleSentence = w.ExampleSentence,
                 CategoryId = w.CategoryId
             });
+        }
+
+        public async Task<WordDto?> UpdateWordAsync(Guid wordId, UpdateWordDto updateWordDto, Guid userId)
+        {
+            var word = await _wordRepository.GetByIdAsync(wordId);
+
+            if (word == null || word.CreatedById != userId)
+            {
+                return null; 
+            }
+
+            word.OriginalText = updateWordDto.OriginalText;
+            word.Translation = updateWordDto.Translation;
+            word.PartOfSpeech = updateWordDto.PartOfSpeech;
+            word.ExampleSentence = updateWordDto.ExampleSentence;
+            word.CategoryId = updateWordDto.CategoryId;
+
+            _wordRepository.Update(word);
+            await _wordRepository.SaveChangesAsync();
+
+            return new WordDto
+            {
+                Id = word.Id,
+                OriginalText = word.OriginalText,
+                Translation = word.Translation,
+                PartOfSpeech = word.PartOfSpeech,
+                ExampleSentence = word.ExampleSentence,
+                CategoryId = word.CategoryId
+            };
         }
     }
 }

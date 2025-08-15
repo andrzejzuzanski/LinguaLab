@@ -13,5 +13,8 @@ namespace LinguaLab.Application.Interfaces
         Task<Category?> GetByIdAsync(Guid id);
         Task AddAsync(Category category);
         Task<int> SaveChangesAsync();
+        void Update(Category category);
+        void Remove(Category category);
+        Task<bool> IsEmptyAsync(Guid categoryId);
     }
 }

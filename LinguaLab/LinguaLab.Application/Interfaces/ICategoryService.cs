@@ -11,5 +11,7 @@ namespace LinguaLab.Application.Interfaces
     {
         Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync();
         Task<CategoryDto> CreateCategoryAsync(CreateCategoryDto createCategoryDto);
+        Task<CategoryDto?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDto updateCategoryDto);
+        Task<bool> DeleteCategoryAsync(Guid categoryId);
     }
 }

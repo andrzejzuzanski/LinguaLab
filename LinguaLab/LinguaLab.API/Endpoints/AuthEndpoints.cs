@@ -7,7 +7,8 @@ namespace LinguaLab.API.Endpoints
     {
         public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder app)
         {
-            var group = app.MapGroup("/api/auth");
+            var group = app.MapGroup("/api/auth")
+                .WithTags("Authentication");
 
             group.MapPost("/register", async (RegisterUserDto registerDto, IAuthService authService) =>
             {

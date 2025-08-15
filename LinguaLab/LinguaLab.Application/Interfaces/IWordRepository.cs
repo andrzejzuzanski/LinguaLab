@@ -12,5 +12,8 @@ namespace LinguaLab.Application.Interfaces
         Task<IEnumerable<Word>> GetWordsForUserAsync(Guid userId);
         Task AddAsync(Word word);
         Task<int> SaveChangesAsync();
+        void Update(Word word);
+        void Remove(Word word);
+        Task<Word?> GetByIdAsync(Guid wordId);
     }
 }

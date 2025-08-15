@@ -38,6 +38,24 @@ namespace LinguaLab.Application.Services
             };
         }
 
+        public async Task<bool> DeleteCategoryAsync(Guid categoryId)
+        {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+            if (category == null)
+            {
+                return false;
+            }
+
+            if(!await _categoryRepository.IsEmptyAsync(categoryId))
+            {
+                throw new InvalidOperationException("Cannot delete a category that contains words.");
+            }
+
+            _categoryRepository.Remove(category);
+            await _categoryRepository.SaveChangesAsync();
+            return true;
+        }
+
         public async Task<IEnumerable<CategoryDto>> GetAllCategoriesAsync()
         {
             var categories = await _categoryRepository.GetAllAsync();
@@ -48,6 +66,29 @@ namespace LinguaLab.Application.Services
                 Name = c.Name,
                 Description = c.Description
             });
+        }
+
+        public async Task<CategoryDto?> UpdateCategoryAsync(Guid categoryId, UpdateCategoryDto updateCategoryDto)
+        {
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
+
+            if (category == null)
+            {
+                return null;
+            }
+
+            category.Name = updateCategoryDto.Name;
+            category.Description = updateCategoryDto.Description;
+
+            _categoryRepository.Update(category);
+            await _categoryRepository.SaveChangesAsync();
+
+            return new CategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description
+            };
         }
     }
 }
