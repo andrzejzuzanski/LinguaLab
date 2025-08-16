@@ -25,7 +25,7 @@ namespace LinguaLab.API
                 options.AddPolicy(name: myAllowSpecificOrigins,
                     policy =>
                     {
-                        policy.WithOrigins("https://localhost:4200")
+                        policy.WithOrigins("http://localhost:4200", "https://localhost:4200")
                               .AllowAnyHeader()
                               .AllowAnyMethod();
                     });
@@ -104,7 +104,7 @@ namespace LinguaLab.API
                 app.UseSwaggerUI();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseCors(myAllowSpecificOrigins);
 
