@@ -49,6 +49,23 @@ namespace LinguaLab.API.Endpoints
                 return Results.NoContent();
             });
 
+            group.MapPost("/import", async (IFormFile file, HttpContext httpContext, IWordService wordService) =>
+            {
+                if (file == null || file.Length == 0)
+                {
+                    return Results.BadRequest("No file uploaded.");
+                }
+
+                var userId = Guid.Parse(httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+                var importedCount = await wordService.ImportWordsFromCsvAsync(file, userId);
+                return Results.Ok(new { message = $"Successfully imported {importedCount} words." });
+            })
+                .Accepts<IFormFile>("multipart/form-data")
+                .Produces(StatusCodes.Status200OK)
+                .Produces(StatusCodes.Status400BadRequest)
+                .DisableAntiforgery();
+
             return app;
         }
     }

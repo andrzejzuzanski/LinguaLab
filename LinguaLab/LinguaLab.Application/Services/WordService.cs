@@ -1,21 +1,27 @@
 ﻿using LinguaLab.Application.DTOs;
 using LinguaLab.Application.Interfaces;
 using LinguaLab.Core.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CsvHelper;
+using LinguaLab.Application.Models;
+using System.Globalization;
 
 namespace LinguaLab.Application.Services
 {
     public class WordService : IWordService
     {
         private readonly IWordRepository _wordRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
-        public WordService(IWordRepository wordRepository)
+        public WordService(IWordRepository wordRepository, ICategoryRepository categoryRepository)
         {
             _wordRepository = wordRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public async Task<WordDto> CreateWordAsync(CreateWordDto createWordDto, Guid userId)
@@ -72,6 +78,55 @@ namespace LinguaLab.Application.Services
                 ExampleSentence = w.ExampleSentence,
                 CategoryId = w.CategoryId
             });
+        }
+
+        public async Task<int> ImportWordsFromCsvAsync(IFormFile file, Guid userId)
+        {
+            var wordsToAdd = new List<Word>();
+
+            using (var reader = new StreamReader(file.OpenReadStream()))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<WordCsvRecord>().ToList();
+
+                foreach (var record in records)
+                {
+                    var category = await _categoryRepository.GetByNameAsync(record.CategoryName);
+
+                    if (category == null)
+                    {
+                        category = new Category
+                        {
+                            Id = Guid.NewGuid(),
+                            Name = record.CategoryName,
+                            Description = "Auto-generated category"
+                        };
+                        await _categoryRepository.AddAsync(category);
+                        await _categoryRepository.SaveChangesAsync();
+                    }
+
+                    var word = new Word
+                    {
+                        Id = Guid.NewGuid(),
+                        OriginalText = record.OriginalText,
+                        Translation = record.Translation,
+                        PartOfSpeech = record.PartOfSpeech,
+                        ExampleSentence = record.ExampleSentence,
+                        CategoryId = category.Id,
+                        CreatedById = userId
+                    };
+                    wordsToAdd.Add(word);
+                }
+            }
+
+            foreach (var word in wordsToAdd)
+            {
+                await _wordRepository.AddAsync(word);
+            }
+
+            await _wordRepository.SaveChangesAsync();
+
+            return wordsToAdd.Count;
         }
 
         public async Task<WordDto?> UpdateWordAsync(Guid wordId, UpdateWordDto updateWordDto, Guid userId)

@@ -34,6 +34,11 @@ namespace LinguaLab.Infrastructure.Repositories
             return await _context.Categories.FindAsync(id);
         }
 
+        public async Task<Category?> GetByNameAsync(string name)
+        {
+            return await _context.Categories.FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower());
+        }
+
         public async Task<bool> IsEmptyAsync(Guid categoryId)
         {
             return !await _context.Words

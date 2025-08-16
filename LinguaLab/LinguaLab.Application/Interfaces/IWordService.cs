@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 
 namespace LinguaLab.Application.Interfaces
 {
@@ -14,5 +15,6 @@ namespace LinguaLab.Application.Interfaces
         Task<WordDto> CreateWordAsync(CreateWordDto createWordDto, Guid userId);
         Task<WordDto?> UpdateWordAsync(Guid wordId, UpdateWordDto updateWordDto, Guid userId);
         Task<bool> DeleteWordAsync(Guid wordId, Guid userId);
+        Task<int> ImportWordsFromCsvAsync(IFormFile file, Guid userId);
     }
 }
