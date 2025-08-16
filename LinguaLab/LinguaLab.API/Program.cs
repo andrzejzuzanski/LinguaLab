@@ -18,6 +18,19 @@ namespace LinguaLab.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: myAllowSpecificOrigins,
+                    policy =>
+                    {
+                        policy.WithOrigins("https://localhost:4200")
+                              .AllowAnyHeader()
+                              .AllowAnyMethod();
+                    });
+            });
+
             // Add services to the container.
             builder.Services.AddDbContext<LinguaLabDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("LinguaLabConnection")));
@@ -92,6 +105,8 @@ namespace LinguaLab.API
             }
 
             app.UseHttpsRedirection();
+
+            app.UseCors(myAllowSpecificOrigins);
 
             app.UseAuthentication();
             app.UseAuthorization();
