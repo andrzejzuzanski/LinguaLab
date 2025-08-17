@@ -1,5 +1,13 @@
 <mat-toolbar color="primary">
   <span>LinguaLab</span>
+  <span class="spacer"></span>
+  <ng-container *ngIf="!(isLoggedIn$ | async)">
+    <a mat-button routerLink="/auth/login">Login</a>
+    <a mat-button routerLink="/auth/register">Register</a>
+  </ng-container>
+  <ng-container *ngIf="isLoggedIn$ | async">
+    <button mat-button (click)="logout()">Logout</button>
+  </ng-container>
 </mat-toolbar>
 
 <main>
