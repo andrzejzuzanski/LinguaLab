@@ -1,1 +1,16 @@
-<p>dashboard-home works!</p>
+<div class="dashboard-container">
+  <h1>Your Activity</h1>
+
+  <div *ngIf="heatmapData.length > 0; else noData">
+    <h2>Heatmap Data</h2>
+
+    <div *ngFor="let item of heatmapData" class="data-row">
+      <span>Date: {{ item.date | date : "longDate" }}</span>
+      <span>Count: {{ item.count }}</span>
+    </div>
+  </div>
+
+  <ng-template #noData>
+    <p>No activity data to display yet. Go learn something!</p>
+  </ng-template>
+</div>

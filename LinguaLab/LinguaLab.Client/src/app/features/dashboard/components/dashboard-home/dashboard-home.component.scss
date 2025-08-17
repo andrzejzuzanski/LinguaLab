@@ -1,0 +1,11 @@
+.dashboard-container {
+  padding: 24px;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #eee;
+  max-width: 400px;
+}
