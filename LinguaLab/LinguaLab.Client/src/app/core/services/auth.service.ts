@@ -44,4 +44,8 @@ export class AuthService {
     this.loggedIn.next(false);
     this.router.navigate(['/auth/login']);
   }
+
+  register(data: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/register`, data);
+  }
 }
