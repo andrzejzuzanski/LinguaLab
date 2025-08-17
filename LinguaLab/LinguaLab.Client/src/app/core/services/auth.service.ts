@@ -12,8 +12,6 @@ export class AuthService {
 
   login(data: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, data).pipe(
-      // 'tap' pozwala wykonać akcję uboczną (np. zapis do localStorage)
-      // bez modyfikowania samej odpowiedzi, która płynie dalej do komponentu.
       tap((response) => {
         if (response && response.token) {
           this.setToken(response.token);

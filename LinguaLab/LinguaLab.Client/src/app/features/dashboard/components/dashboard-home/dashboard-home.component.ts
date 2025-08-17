@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard-home',
-  standalone: false,
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './dashboard-home.component.html',
-  styleUrl: './dashboard-home.component.scss'
+  styleUrl: './dashboard-home.component.scss',
 })
-export class DashboardHomeComponent {
-
-}
+export class DashboardHomeComponent {}
