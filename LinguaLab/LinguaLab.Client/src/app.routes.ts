@@ -15,6 +15,14 @@ export const routes: Routes = [
       ),
     canActivate: [authGuard],
   },
+  {
+    path: 'vocabulary',
+    loadComponent: () =>
+      import(
+        './app/features/vocabulary/pages/vocabulary-list/vocabulary-list.component'
+      ).then((c) => c.VocabularyListComponent),
+    canActivate: [authGuard],
+  },
 
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
 ];

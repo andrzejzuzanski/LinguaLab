@@ -1,0 +1,26 @@
+<div class="container">
+  <h1>My Vocabulary</h1>
+
+  <table mat-table [dataSource]="words" class="mat-elevation-z8">
+    <!-- Kolumna Original Text -->
+    <ng-container matColumnDef="originalText">
+      <th mat-header-cell *matHeaderCellDef>Original</th>
+      <td mat-cell *matCellDef="let word">{{ word.originalText }}</td>
+    </ng-container>
+
+    <!-- Kolumna Translation -->
+    <ng-container matColumnDef="translation">
+      <th mat-header-cell *matHeaderCellDef>Translation</th>
+      <td mat-cell *matCellDef="let word">{{ word.translation }}</td>
+    </ng-container>
+
+    <!-- Kolumna Part of Speech -->
+    <ng-container matColumnDef="partOfSpeech">
+      <th mat-header-cell *matHeaderCellDef>Part of Speech</th>
+      <td mat-cell *matCellDef="let word">{{ word.partOfSpeech }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>
