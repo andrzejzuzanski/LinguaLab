@@ -1,0 +1,31 @@
+<h1 mat-dialog-title>Add New Word</h1>
+<div mat-dialog-content>
+  <form [formGroup]="wordForm" class="word-form">
+    <mat-form-field appearance="outline">
+      <mat-label>Original Text</mat-label>
+      <input matInput formControlName="originalText" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Translation</mat-label>
+      <input matInput formControlName="translation" />
+    </mat-form-field>
+
+    <!-- Na razie pole tekstowe, zaraz zamienimy na listę rozwijaną -->
+    <mat-form-field appearance="outline">
+      <mat-label>Category ID</mat-label>
+      <input matInput formControlName="categoryId" />
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="!wordForm.valid"
+  >
+    Save
+  </button>
+</div>

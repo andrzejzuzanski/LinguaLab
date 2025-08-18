@@ -12,4 +12,8 @@ export class WordService {
   getWords(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);
   }
+
+  createWord(wordData: any): Observable<any> {
+    return this.http.post(this.apiUrl, wordData);
+  }
 }

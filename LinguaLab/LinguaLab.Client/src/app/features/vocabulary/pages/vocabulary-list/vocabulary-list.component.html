@@ -1,20 +1,22 @@
 <div class="container">
   <h1>My Vocabulary</h1>
-
+  <div class="header">
+    <h1>My Vocabulary</h1>
+    <button mat-flat-button color="primary" (click)="openAddWordDialog()">
+      Add New Word
+    </button>
+  </div>
   <table mat-table [dataSource]="words" class="mat-elevation-z8">
-    <!-- Kolumna Original Text -->
     <ng-container matColumnDef="originalText">
       <th mat-header-cell *matHeaderCellDef>Original</th>
       <td mat-cell *matCellDef="let word">{{ word.originalText }}</td>
     </ng-container>
 
-    <!-- Kolumna Translation -->
     <ng-container matColumnDef="translation">
       <th mat-header-cell *matHeaderCellDef>Translation</th>
       <td mat-cell *matCellDef="let word">{{ word.translation }}</td>
     </ng-container>
 
-    <!-- Kolumna Part of Speech -->
     <ng-container matColumnDef="partOfSpeech">
       <th mat-header-cell *matHeaderCellDef>Part of Speech</th>
       <td mat-cell *matCellDef="let word">{{ word.partOfSpeech }}</td>

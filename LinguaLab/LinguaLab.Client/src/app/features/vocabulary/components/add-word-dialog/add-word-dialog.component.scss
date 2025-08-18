@@ -1,0 +1,11 @@
+.word-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Odstęp między polami */
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
