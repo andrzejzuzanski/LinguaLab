@@ -1,0 +1,45 @@
+<div class="session-container">
+  <!-- Pokaż, jeśli sesja się ładuje lub jest zakończona -->
+  <ng-container *ngIf="!currentWord">
+    <mat-card class="session-end-card">
+      <mat-card-title>Session Complete!</mat-card-title>
+      <mat-card-content>
+        <p>You have reviewed all the words for this session.</p>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-raised-button color="primary" (click)="startNewSession()">
+          Start New Session
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </ng-container>
+
+  <ng-container *ngIf="currentWord">
+    <mat-card class="flashcard" (click)="flipCard()">
+      <!-- Zmieniamy tę linię, aby dynamicznie dodawać klasę 'is-flipped' -->
+      <div class="flashcard-content" [class.is-flipped]="isFlipped">
+        <!-- Przód fiszki (usuwamy [class.hidden]) -->
+        <div class="front">
+          <div class="word">{{ currentWord.originalText }}</div>
+          <div class="hint">{{ currentWord.partOfSpeech }}</div>
+        </div>
+        <!-- Tył fiszki (usuwamy [class.hidden]) -->
+        <div class="back">
+          <div class="word">{{ currentWord.translation }}</div>
+          <div class="example">{{ currentWord.exampleSentence }}</div>
+        </div>
+      </div>
+    </mat-card>
+
+    <div class="answer-buttons" *ngIf="isFlipped">
+      <button
+        *ngFor="let answer of answerQualities"
+        mat-fab
+        [color]="answer.label === 'Easy' ? 'primary' : 'accent'"
+        (click)="submitAnswer(answer.quality)"
+      >
+        <mat-icon>{{ answer.icon }}</mat-icon>
+      </button>
+    </div>
+  </ng-container>
+</div>

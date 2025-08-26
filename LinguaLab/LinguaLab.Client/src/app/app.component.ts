@@ -13,6 +13,7 @@ import { CommonModule } from '@angular/common';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
+  title = 'LinguaLab.Client';
   private authService = inject(AuthService);
   isLoggedIn$: Observable<boolean>;
 

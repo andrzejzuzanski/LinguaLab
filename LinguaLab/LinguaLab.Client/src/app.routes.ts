@@ -23,6 +23,14 @@ export const routes: Routes = [
       ).then((c) => c.VocabularyListComponent),
     canActivate: [authGuard],
   },
+  {
+    path: 'learning',
+    loadComponent: () =>
+      import(
+        './app/features/learning/pages/learning-session/learning-session.component'
+      ).then((c) => c.LearningSessionComponent),
+    canActivate: [authGuard],
+  },
 
   { path: '', redirectTo: 'auth/login', pathMatch: 'full' },
 ];
