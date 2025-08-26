@@ -13,8 +13,13 @@
 
     <!-- Na razie pole tekstowe, zaraz zamienimy na listę rozwijaną -->
     <mat-form-field appearance="outline">
-      <mat-label>Category ID</mat-label>
-      <input matInput formControlName="categoryId" />
+      <mat-label>Category</mat-label>
+      <mat-select formControlName="categoryId">
+        <!-- Używamy *ngFor do dynamicznego generowania opcji -->
+        <mat-option *ngFor="let category of categories" [value]="category.id">
+          {{ category.name }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
   </form>
 </div>

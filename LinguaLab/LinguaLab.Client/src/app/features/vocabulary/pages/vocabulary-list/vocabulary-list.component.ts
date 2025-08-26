@@ -4,6 +4,7 @@ import { MaterialModule } from '../../../../material.module';
 import { WordService } from '../../../../core/services/word.service';
 import { MatDialog } from '@angular/material/dialog';
 import { AddWordDialogComponent } from '../../components/add-word-dialog/add-word-dialog.component';
+import { CategoryService } from '../../../../core/services/category.service';
 
 @Component({
   selector: 'app-vocabulary-list',
@@ -15,12 +16,22 @@ import { AddWordDialogComponent } from '../../components/add-word-dialog/add-wor
 export class VocabularyListComponent implements OnInit {
   private wordService = inject(WordService);
   private dialog = inject(MatDialog);
+  private categoryService = inject(CategoryService);
 
   words: any[] = [];
+  categories: any[] = [];
   displayedColumns: string[] = ['originalText', 'translation', 'partOfSpeech'];
 
   ngOnInit(): void {
-    this.loadWords();
+    this.loadInitialData();
+  }
+
+  loadInitialData(): void {
+    this.wordService.getWords().subscribe((data) => (this.words = data));
+    this.categoryService.getCategories().subscribe((data) => {
+      console.log('Categories loaded in parent:', data);
+      this.categories = data;
+    });
   }
 
   loadWords(): void {
@@ -32,14 +43,14 @@ export class VocabularyListComponent implements OnInit {
   openAddWordDialog(): void {
     const dialogRef = this.dialog.open(AddWordDialogComponent, {
       width: '400px',
+      data: { categories: this.categories },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      console.log('The dialog was closed', result);
       if (result) {
         this.wordService.createWord(result).subscribe(() => {
           console.log('Word created successfully!');
-          this.loadWords();
+          this.loadInitialData();
         });
       }
     });

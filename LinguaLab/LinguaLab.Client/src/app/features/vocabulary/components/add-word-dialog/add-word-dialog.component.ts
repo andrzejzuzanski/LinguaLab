@@ -1,11 +1,11 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, Inject } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MaterialModule } from '../../../../material.module';
 import { CommonModule } from '@angular/common';
 
@@ -18,9 +18,18 @@ import { CommonModule } from '@angular/common';
 })
 export class AddWordDialogComponent implements OnInit {
   wordForm!: FormGroup;
+  categories: any[] = [];
 
   private fb = inject(FormBuilder);
   private dialogRef = inject(MatDialogRef<AddWordDialogComponent>);
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+    if (data && data.categories) {
+      this.categories = data.categories;
+    }
+    console.log('Data received in dialog:', this.data);
+    console.log('Categories assigned in dialog:', this.categories);
+  }
 
   ngOnInit(): void {
     this.wordForm = this.fb.group({
